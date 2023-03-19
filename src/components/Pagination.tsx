@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 type Props = {
   orderListLength: number;
@@ -13,6 +14,7 @@ const Pagination = ({
   currentPage,
   setCurrentPage,
 }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const pageCount = Math.ceil(orderListLength / ordersPerPage);
 
   const pageList = Array(pageCount)
@@ -26,6 +28,8 @@ const Pagination = ({
           key={number}
           onClick={() => {
             setCurrentPage(number);
+            searchParams.set("page", `${number}`);
+            setSearchParams(searchParams);
           }}
         >
           {number}
