@@ -33,6 +33,24 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
     }
   };
 
+  const onClickStatus = (target: boolean) => {
+    if (target) {
+      if (queryData.queryStatus === "true") {
+        setSearchParams({ ...searchParams });
+      } else {
+        searchParams.set("orderStatus", "true");
+        setSearchParams(searchParams);
+      }
+    } else {
+      if (queryData.queryStatus === "false") {
+        setSearchParams({ ...searchParams });
+      } else {
+        searchParams.set("orderStatus", "false");
+        setSearchParams(searchParams);
+      }
+    }
+  };
+
   return (
     <table>
       <thead>
@@ -40,7 +58,7 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
           <th
             onClick={() => {
               queryData.queryID
-                ? setSearchParams({})
+                ? setSearchParams({ ...searchParams })
                 : setSearchParams({ id: "desc" });
             }}
           >
@@ -49,13 +67,29 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
           <th
             onClick={() => {
               queryData.queryTransactionTime
-                ? setSearchParams({})
+                ? setSearchParams({ ...searchParams })
                 : setSearchParams({ transactionTime: "desc" });
             }}
           >
             거래시간
           </th>
-          <th>주문처리상태</th>
+          <th>
+            주문처리상태
+            <button
+              onClick={() => {
+                onClickStatus(true);
+              }}
+            >
+              완료
+            </button>
+            <button
+              onClick={() => {
+                onClickStatus(false);
+              }}
+            >
+              미완료
+            </button>
+          </th>
           <th>고객번호</th>
           <th>고객이름</th>
           <th>가격</th>

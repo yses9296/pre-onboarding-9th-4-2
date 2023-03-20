@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import OrderTableBoard from "../components/OrderTableBoard";
 import Pagination from "../components/Pagination";
@@ -6,10 +6,9 @@ import useFetchData from "../hooks/useFetchData";
 import { getQueryData } from "../utils/getQueryData";
 
 const AdminPage = () => {
-  const { isLoading, orders, error } = useFetchData();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const queryData = getQueryData(searchParams);
+  const { isLoading, orders, error } = useFetchData(queryData.queryStatus);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const ordersPerPage = 20;
@@ -25,6 +24,7 @@ const AdminPage = () => {
   return (
     <div>
       <h2>AdminPage</h2>
+
       <OrderTableBoard
         orders={orders}
         offset={offset}
