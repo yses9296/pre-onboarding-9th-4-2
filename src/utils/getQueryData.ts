@@ -1,8 +1,11 @@
-export const getQueryData = (searchParams: URLSearchParams) => {
-  const queryID = searchParams.get("id");
-  const queryTransactionTime = searchParams.get("transactionTime");
-  const queryPage = searchParams.get("page");
-  const queryStatus = searchParams.get("orderStatus");
+import { ID, PAGE, SEARCH, STATUS, TIME } from "../consts/query.const";
 
-  return { queryID, queryTransactionTime, queryPage, queryStatus };
+export const getQueryData = (searchParams: URLSearchParams) => {
+  const queryID = searchParams.get(ID);
+  const queryTransactionTime = searchParams.get(TIME);
+  const queryPage = searchParams.get(PAGE);
+  const queryStatus = searchParams.get(STATUS);
+  const querySearch = searchParams.get(SEARCH);
+
+  return { queryID, queryTransactionTime, queryPage, queryStatus, querySearch };
 };

@@ -4,7 +4,13 @@ import { OrderInterface } from "../types/order.type";
 
 const CURRENT_DATE = "2023-03-08";
 
-const useFetchData = (orderStatus: string | null) => {
+type Props = {
+  queryStatus: string | null;
+  querySearch: string | null;
+};
+
+// const useFetchData = (orderStatus: string | null) => {
+const useFetchData = ({ queryStatus, querySearch }: Props) => {
   const {
     isLoading,
     data: _orders,
@@ -14,25 +20,37 @@ const useFetchData = (orderStatus: string | null) => {
     refetchInterval: 5000,
   });
 
-  if (orderStatus) {
+  const filteredByDate = _orders?.filter((item: OrderInterface) =>
+    item.transaction_time.includes(CURRENT_DATE)
+  );
+
+  if (queryStatus !== null && querySearch != null) {
     const orders =
-      _orders
+      filteredByDate
         ?.filter((item: OrderInterface) =>
-          item.transaction_time.includes(CURRENT_DATE)
+          item.customer_name.includes(querySearch!)
         )
-        .filter(
-          (item: OrderInterface) => item.status.toString() === orderStatus
+        ?.filter(
+          (item: OrderInterface) => item.status.toString() === queryStatus
         ) || [];
-
     return { isLoading, orders, error };
-  } else {
+  } else if (querySearch !== null) {
     const orders =
-      _orders?.filter((item: OrderInterface) =>
-        item.transaction_time.includes(CURRENT_DATE)
+      filteredByDate?.filter((item: OrderInterface) =>
+        item.customer_name.includes(querySearch!)
       ) || [];
-
+    return { isLoading, orders, error };
+  } else if (queryStatus !== null) {
+    const orders =
+      filteredByDate?.filter(
+        (item: OrderInterface) => item.status.toString() === queryStatus
+      ) || [];
     return { isLoading, orders, error };
   }
+
+  const orders = filteredByDate || [];
+
+  return { isLoading, orders, error };
 };
 
 export default useFetchData;

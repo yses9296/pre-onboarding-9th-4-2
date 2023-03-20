@@ -21,17 +21,22 @@ const Pagination = ({
     .fill(1)
     .map((v, i) => v + i);
 
+  const onClickPageBtn = (number: number) => {
+    setCurrentPage(number);
+
+    if (number === 1) {
+      searchParams.delete("page");
+      setSearchParams(searchParams);
+    } else {
+      searchParams.set("page", `${number}`);
+      setSearchParams(searchParams);
+    }
+  };
+
   return (
     <>
       {pageList.map((number: number) => (
-        <button
-          key={number}
-          onClick={() => {
-            setCurrentPage(number);
-            searchParams.set("page", `${number}`);
-            setSearchParams(searchParams);
-          }}
-        >
+        <button key={number} onClick={() => onClickPageBtn(number)}>
           {number}
         </button>
       ))}

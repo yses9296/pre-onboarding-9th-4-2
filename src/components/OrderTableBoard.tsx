@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { OrderInterface } from "../types/order.type";
 import { getQueryData } from "../utils/getQueryData";
+import { queryStatusHandler } from "../utils/queryHandler";
 import OrderTableBody from "./OrderTableBody";
 
 type Props = {
@@ -34,20 +35,12 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
   };
 
   const onClickStatus = (target: boolean) => {
-    if (target) {
-      if (queryData.queryStatus === "true") {
-        setSearchParams({ ...searchParams });
-      } else {
-        searchParams.set("orderStatus", "true");
-        setSearchParams(searchParams);
-      }
+    if (queryData.queryStatus === `${target}`) {
+      searchParams.delete("orderStatus");
+      setSearchParams(searchParams);
     } else {
-      if (queryData.queryStatus === "false") {
-        setSearchParams({ ...searchParams });
-      } else {
-        searchParams.set("orderStatus", "false");
-        setSearchParams(searchParams);
-      }
+      searchParams.set("orderStatus", `${target}`);
+      setSearchParams(searchParams);
     }
   };
 
@@ -57,18 +50,34 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
         <tr>
           <th
             onClick={() => {
-              queryData.queryID
-                ? setSearchParams({ ...searchParams })
-                : setSearchParams({ id: "desc" });
+              if (queryData.queryID) {
+                searchParams.delete("id");
+                setSearchParams(searchParams);
+              } else {
+                if (queryData.queryTransactionTime) {
+                  searchParams.delete("transactionTime");
+                  setSearchParams(searchParams);
+                }
+                searchParams.set("id", "desc");
+                setSearchParams(searchParams);
+              }
             }}
           >
             주문번호
           </th>
           <th
             onClick={() => {
-              queryData.queryTransactionTime
-                ? setSearchParams({ ...searchParams })
-                : setSearchParams({ transactionTime: "desc" });
+              if (queryData.queryTransactionTime) {
+                searchParams.delete("transactionTime");
+                setSearchParams(searchParams);
+              } else {
+                if (queryData.queryID) {
+                  searchParams.delete("id");
+                  setSearchParams(searchParams);
+                }
+                searchParams.set("transactionTime", "desc");
+                setSearchParams(searchParams);
+              }
             }}
           >
             거래시간

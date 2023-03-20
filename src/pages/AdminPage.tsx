@@ -8,11 +8,23 @@ import { getQueryData } from "../utils/getQueryData";
 const AdminPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryData = getQueryData(searchParams);
-  const { isLoading, orders, error } = useFetchData(queryData.queryStatus);
+
+  const queryStatus = queryData.queryStatus;
+  const querySearch = queryData.querySearch;
+  const { isLoading, orders, error } = useFetchData({
+    queryStatus,
+    querySearch,
+  });
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const ordersPerPage = 20;
   const offset = (currentPage - 1) * ordersPerPage;
+
+  const [searchInput, setSearchInput] = useState("");
+  const onClickSearchBtn = () => {
+    searchParams.set("search", `${searchInput}`);
+    setSearchParams(searchParams);
+  };
 
   useEffect(() => {
     if (queryData.queryPage) setCurrentPage(parseInt(queryData.queryPage));
@@ -25,6 +37,12 @@ const AdminPage = () => {
     <div>
       <h2>AdminPage</h2>
 
+      <input
+        type="text"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+      />
+      <button onClick={onClickSearchBtn}>검색</button>
       <OrderTableBoard
         orders={orders}
         offset={offset}
