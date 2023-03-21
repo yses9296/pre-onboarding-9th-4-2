@@ -23,8 +23,10 @@ const useFetchData = ({ queryStatus, querySearch }: QueryProps) => {
     item.transaction_time.includes(CURRENT_DATE)
   );
 
+  let orders = filteredByDate || [];
+
   if (queryStatus !== null && querySearch != null) {
-    const orders =
+    orders =
       filteredByDate
         ?.filter((item: OrderInterface) =>
           item.customer_name.toLowerCase().includes(querySearch!.toLowerCase())
@@ -32,25 +34,17 @@ const useFetchData = ({ queryStatus, querySearch }: QueryProps) => {
         ?.filter(
           (item: OrderInterface) => item.status.toString() === queryStatus
         ) || [];
-
-    return { isLoading, orders, error };
   } else if (querySearch !== null) {
-    const orders =
+    orders =
       filteredByDate?.filter((item: OrderInterface) =>
         item.customer_name.toLowerCase().includes(querySearch!.toLowerCase())
       ) || [];
-
-    return { isLoading, orders, error };
   } else if (queryStatus !== null) {
-    const orders =
+    orders =
       filteredByDate?.filter(
         (item: OrderInterface) => item.status.toString() === queryStatus
       ) || [];
-
-    return { isLoading, orders, error };
   }
-
-  const orders = filteredByDate || [];
 
   return { isLoading, orders, error };
 };

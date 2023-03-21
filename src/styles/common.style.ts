@@ -18,6 +18,10 @@ export const SearchBar = styled.div`
   margin-bottom: 12px;
 `;
 
+export const SearchBarLabel = styled.label`
+  margin-right: 10px;
+`;
+
 export const SearchBarInput = styled.input`
   width: 300px;
   padding: 8px 12px;

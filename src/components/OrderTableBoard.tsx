@@ -1,9 +1,11 @@
 import { useSearchParams } from "react-router-dom";
-import { SORT, STATUS, ID_DESC, TIME_DESC } from "../consts/query.const";
+import { SORT, STATUS, SortByTime, SortByID } from "../consts/query.const";
 import { StatusButton, Table, Th, Thead, Tr } from "../styles/table.style";
 import { OrderInterface } from "../types/order.type";
 import { getQueryData } from "../utils/getQueryData";
 import OrderTableBody from "./OrderTableBody";
+import { SortType } from "../types/order.type";
+import getFilteredOrders from "../utils/getFilteredOrders";
 
 type Props = {
   orders: OrderInterface[];
@@ -20,26 +22,19 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
     return orderList.slice(offset, offset + ordersPerPage);
   };
 
-  const getFilteredOrders = () => {
-    if (querySort === ID_DESC) {
-      return orders!.sort(
-        (a: OrderInterface, b: OrderInterface) => b.id - a.id
-      );
-    } else if (querySort === TIME_DESC) {
-      return orders!.sort(
-        (a: OrderInterface, b: OrderInterface) =>
-          new Date(b.transaction_time).getTime() -
-          new Date(a.transaction_time).getTime()
-      );
-    } else {
-      return orders;
+  const setQuerySort = (SortType: SortType) => {
+    switch (querySort) {
+      case SortType.DESC:
+        searchParams.set(SORT, SortType.ASC);
+        break;
+      case SortType.ASC:
+        searchParams.delete(SORT);
+        break;
+      default:
+        searchParams.set(SORT, SortType.DESC);
+        break;
     }
-  };
 
-  const setQuerySort = (queryValue: string) => {
-    querySort === queryValue
-      ? searchParams.delete(SORT)
-      : searchParams.set(SORT, queryValue);
     setSearchParams(searchParams);
   };
 
@@ -57,14 +52,14 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
         <Tr>
           <Th
             onClick={() => {
-              setQuerySort(ID_DESC);
+              setQuerySort(SortByID);
             }}
           >
             주문번호
           </Th>
           <Th
             onClick={() => {
-              setQuerySort(TIME_DESC);
+              setQuerySort(SortByTime);
             }}
           >
             거래시간
@@ -94,7 +89,9 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
         </Tr>
       </Thead>
       <OrderTableBody
-        currentOrderList={getCurrentPageOrders(getFilteredOrders())}
+        currentOrderList={getCurrentPageOrders(
+          getFilteredOrders({ querySort: querySort, orders: orders })
+        )}
       />
     </Table>
   );

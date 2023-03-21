@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import OrderTableBoard from "../components/OrderTableBoard";
 import Pagination from "../components/Pagination";
@@ -10,6 +10,7 @@ import {
   SearchBar,
   SearchBarButton,
   SearchBarInput,
+  SearchBarLabel,
 } from "../styles/common.style";
 import { getQueryData } from "../utils/getQueryData";
 
@@ -40,6 +41,12 @@ const AdminPage = () => {
     setSearchInput("");
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setQuerySearch();
+    }
+  };
+
   useEffect(() => {
     if (queryData.queryPage) setCurrentPage(parseInt(queryData.queryPage));
   }, [searchParams]);
@@ -52,15 +59,20 @@ const AdminPage = () => {
       <Header onClick={() => navigate("/")}>스위치원 | 어드민</Header>
 
       <SearchBar>
+        <SearchBarLabel>고객 이름 검색</SearchBarLabel>
         <SearchBarInput
           type="text"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
+          onKeyPress={handleKeyPress}
         />
         <SearchBarButton onClick={setQuerySearch}>검색</SearchBarButton>
-        {queryData.querySearch !== "" && queryData.querySearch !== null && (
-          <SearchBarButton onClick={setQuerySearchReset}>취소</SearchBarButton>
-        )}
+        {queryData.querySearch?.length !== 0 &&
+          queryData.querySearch !== null && (
+            <SearchBarButton onClick={setQuerySearchReset}>
+              취소
+            </SearchBarButton>
+          )}
       </SearchBar>
       <OrderTableBoard
         orders={orders}

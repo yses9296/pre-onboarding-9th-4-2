@@ -6,3 +6,8 @@ export interface OrderInterface {
   customer_name: string;
   currency: string;
 }
+
+export type SortType = {
+  ASC: string;
+  DESC: string;
+};
