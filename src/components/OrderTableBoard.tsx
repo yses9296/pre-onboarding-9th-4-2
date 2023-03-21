@@ -1,11 +1,11 @@
 import { useSearchParams } from "react-router-dom";
-import { SORT, STATUS, SortByTime, SortByID } from "../consts/query.const";
-import { StatusButton, Table, Th, Thead, Tr } from "../styles/table.style";
+import { SORT, SortByTime, SortByID } from "../consts/query.const";
 import { OrderInterface } from "../types/order.type";
 import { getQueryData } from "../utils/getQueryData";
 import OrderTableBody from "./OrderTableBody";
 import { SortType } from "../types/order.type";
 import getFilteredOrders from "../utils/getFilteredOrders";
+import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 
 type Props = {
   orders: OrderInterface[];
@@ -38,62 +38,52 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
     setSearchParams(searchParams);
   };
 
-  const setQueryStatus = (status: boolean) => {
-    queryData.queryStatus === `${status}`
-      ? searchParams.delete(STATUS)
-      : searchParams.set(STATUS, `${status}`);
-
-    setSearchParams(searchParams);
-  };
-
   return (
-    <Table>
-      <Thead>
-        <Tr>
-          <Th
+    <table className="w-full">
+      <thead className="bg-amber-400 ">
+        <tr>
+          <th
+            className="py-2 cursor-pointer"
             onClick={() => {
               setQuerySort(SortByID);
             }}
           >
             주문번호
-          </Th>
-          <Th
+            {querySort == SortByID.DESC ? (
+              <FaSortDown className="inline-block" />
+            ) : querySort == SortByID.ASC ? (
+              <FaSortUp className="inline-block" />
+            ) : (
+              <FaSort className="inline-block" />
+            )}
+          </th>
+          <th
+            className="cursor-pointer"
             onClick={() => {
               setQuerySort(SortByTime);
             }}
           >
             거래시간
-          </Th>
-          <Th>
-            주문처리상태
-            <StatusButton
-              onClick={() => {
-                setQueryStatus(true);
-              }}
-              className={queryData.queryStatus === "true" ? "active" : ""}
-            >
-              완료
-            </StatusButton>
-            <StatusButton
-              onClick={() => {
-                setQueryStatus(false);
-              }}
-              className={queryData.queryStatus === "false" ? "active" : ""}
-            >
-              미완료
-            </StatusButton>
-          </Th>
-          <Th>고객번호</Th>
-          <Th>고객이름</Th>
-          <Th>가격</Th>
-        </Tr>
-      </Thead>
+            {querySort == SortByTime.DESC ? (
+              <FaSortDown className="inline-block" />
+            ) : querySort == SortByTime.ASC ? (
+              <FaSortUp className="inline-block" />
+            ) : (
+              <FaSort className="inline-block" />
+            )}
+          </th>
+          <th className="relative">주문처리상태</th>
+          <th>고객번호</th>
+          <th>고객이름</th>
+          <th>가격</th>
+        </tr>
+      </thead>
       <OrderTableBody
         currentOrderList={getCurrentPageOrders(
           getFilteredOrders({ querySort: querySort, orders: orders })
         )}
       />
-    </Table>
+    </table>
   );
 };
 

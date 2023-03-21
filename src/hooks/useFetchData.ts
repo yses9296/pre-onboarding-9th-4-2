@@ -5,17 +5,16 @@ import { OrderInterface } from "../types/order.type";
 const CURRENT_DATE = "2023-03-08";
 
 type QueryProps = {
-  queryStatus: string | null;
-  querySearch: string | null;
+  queryStatusData: string | null;
+  querySearchData: string | null;
 };
 
-const useFetchData = ({ queryStatus, querySearch }: QueryProps) => {
+const useFetchData = ({ queryStatusData, querySearchData }: QueryProps) => {
   const {
     isLoading,
     data: _orders,
     error,
   } = useQuery<OrderInterface[], Error>("orderData", fetchOrderData, {
-    staleTime: 5000,
     refetchInterval: 5000,
   });
 
@@ -25,24 +24,28 @@ const useFetchData = ({ queryStatus, querySearch }: QueryProps) => {
 
   let orders = filteredByDate || [];
 
-  if (queryStatus !== null && querySearch != null) {
+  if (queryStatusData !== null && querySearchData != null) {
     orders =
       filteredByDate
         ?.filter((item: OrderInterface) =>
-          item.customer_name.toLowerCase().includes(querySearch!.toLowerCase())
+          item.customer_name
+            .toLowerCase()
+            .includes(querySearchData!.toLowerCase())
         )
         ?.filter(
-          (item: OrderInterface) => item.status.toString() === queryStatus
+          (item: OrderInterface) => item.status.toString() === queryStatusData
         ) || [];
-  } else if (querySearch !== null) {
+  } else if (querySearchData !== null) {
     orders =
       filteredByDate?.filter((item: OrderInterface) =>
-        item.customer_name.toLowerCase().includes(querySearch!.toLowerCase())
+        item.customer_name
+          .toLowerCase()
+          .includes(querySearchData!.toLowerCase())
       ) || [];
-  } else if (queryStatus !== null) {
+  } else if (queryStatusData !== null) {
     orders =
       filteredByDate?.filter(
-        (item: OrderInterface) => item.status.toString() === queryStatus
+        (item: OrderInterface) => item.status.toString() === queryStatusData
       ) || [];
   }
 

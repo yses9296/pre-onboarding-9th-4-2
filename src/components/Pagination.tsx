@@ -1,7 +1,6 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { PAGE } from "../consts/query.const";
-import { PageButton, PaginationWrap } from "../styles/pagination.style";
 
 type Props = {
   orderListLength: number;
@@ -34,17 +33,21 @@ const Pagination = ({
   };
 
   return (
-    <PaginationWrap>
+    <div className="w- full flex justify-center my-9">
       {pageList.map((number: number) => (
-        <PageButton
+        <button
           key={number}
           onClick={() => onClickPageBtn(number)}
-          className={currentPage === number ? "active" : ""}
+          className={
+            currentPage === number
+              ? "w-6 h-6 bg-slate-300 rounded mx-2"
+              : "w-6 h-6 mx-2"
+          }
         >
           {number}
-        </PageButton>
+        </button>
       ))}
-    </PaginationWrap>
+    </div>
   );
 };
 
