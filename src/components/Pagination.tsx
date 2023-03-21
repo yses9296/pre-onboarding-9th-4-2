@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSearchParams } from "react-router-dom";
+import { PAGE } from "../consts/query.const";
+import { PageButton, PaginationWrap } from "../styles/pagination.style";
 
 type Props = {
   orderListLength: number;
@@ -24,23 +26,25 @@ const Pagination = ({
   const onClickPageBtn = (number: number) => {
     setCurrentPage(number);
 
-    if (number === 1) {
-      searchParams.delete("page");
-      setSearchParams(searchParams);
-    } else {
-      searchParams.set("page", `${number}`);
-      setSearchParams(searchParams);
-    }
+    number === 1
+      ? searchParams.delete(PAGE)
+      : searchParams.set(PAGE, `${number}`);
+
+    setSearchParams(searchParams);
   };
 
   return (
-    <>
+    <PaginationWrap>
       {pageList.map((number: number) => (
-        <button key={number} onClick={() => onClickPageBtn(number)}>
+        <PageButton
+          key={number}
+          onClick={() => onClickPageBtn(number)}
+          className={currentPage === number ? "active" : ""}
+        >
           {number}
-        </button>
+        </PageButton>
       ))}
-    </>
+    </PaginationWrap>
   );
 };
 

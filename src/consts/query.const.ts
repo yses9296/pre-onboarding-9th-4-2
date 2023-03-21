@@ -1,5 +1,7 @@
-export const ID = "id";
-export const TIME = "transactionTime";
 export const PAGE = "page";
-export const STATUS = "orderStatus";
+export const STATUS = "status";
 export const SEARCH = "search";
+export const SORT = "sort";
+
+export const ID_DESC = "ID_DESC";
+export const TIME_DESC = "TIME_DESC";

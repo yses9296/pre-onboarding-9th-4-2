@@ -4,13 +4,12 @@ import { OrderInterface } from "../types/order.type";
 
 const CURRENT_DATE = "2023-03-08";
 
-type Props = {
+type QueryProps = {
   queryStatus: string | null;
   querySearch: string | null;
 };
 
-// const useFetchData = (orderStatus: string | null) => {
-const useFetchData = ({ queryStatus, querySearch }: Props) => {
+const useFetchData = ({ queryStatus, querySearch }: QueryProps) => {
   const {
     isLoading,
     data: _orders,
@@ -33,18 +32,21 @@ const useFetchData = ({ queryStatus, querySearch }: Props) => {
         ?.filter(
           (item: OrderInterface) => item.status.toString() === queryStatus
         ) || [];
+
     return { isLoading, orders, error };
   } else if (querySearch !== null) {
     const orders =
       filteredByDate?.filter((item: OrderInterface) =>
         item.customer_name.includes(querySearch!)
       ) || [];
+
     return { isLoading, orders, error };
   } else if (queryStatus !== null) {
     const orders =
       filteredByDate?.filter(
         (item: OrderInterface) => item.status.toString() === queryStatus
       ) || [];
+
     return { isLoading, orders, error };
   }
 

@@ -1,7 +1,8 @@
 import { useSearchParams } from "react-router-dom";
+import { SORT, STATUS, ID_DESC, TIME_DESC } from "../consts/query.const";
+import { StatusButton, Table, Th, Thead, Tr } from "../styles/table.style";
 import { OrderInterface } from "../types/order.type";
 import { getQueryData } from "../utils/getQueryData";
-import { queryStatusHandler } from "../utils/queryHandler";
 import OrderTableBody from "./OrderTableBody";
 
 type Props = {
@@ -13,17 +14,25 @@ type Props = {
 const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryData = getQueryData(searchParams);
+  const querySort = queryData.querySort;
 
   const getCurrentPageOrders = (orderList: OrderInterface[]) => {
     return orderList.slice(offset, offset + ordersPerPage);
   };
 
+  const setQuerySort = (queryValue: string) => {
+    querySort === queryValue
+      ? searchParams.delete(SORT)
+      : searchParams.set(SORT, queryValue);
+    setSearchParams(searchParams);
+  };
+
   const getFilteredOrders = () => {
-    if (queryData.queryID) {
+    if (querySort === ID_DESC) {
       return orders!.sort(
         (a: OrderInterface, b: OrderInterface) => b.id - a.id
       );
-    } else if (queryData.queryTransactionTime) {
+    } else if (querySort === TIME_DESC) {
       return orders!.sort(
         (a: OrderInterface, b: OrderInterface) =>
           new Date(b.transaction_time).getTime() -
@@ -34,80 +43,60 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
     }
   };
 
-  const onClickStatus = (target: boolean) => {
-    if (queryData.queryStatus === `${target}`) {
-      searchParams.delete("orderStatus");
-      setSearchParams(searchParams);
-    } else {
-      searchParams.set("orderStatus", `${target}`);
-      setSearchParams(searchParams);
-    }
+  const onClickStatus = (status: boolean) => {
+    queryData.queryStatus === `${status}`
+      ? searchParams.delete(STATUS)
+      : searchParams.set(STATUS, `${status}`);
+
+    setSearchParams(searchParams);
   };
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th
+    <Table>
+      <Thead>
+        <Tr>
+          <Th
             onClick={() => {
-              if (queryData.queryID) {
-                searchParams.delete("id");
-                setSearchParams(searchParams);
-              } else {
-                if (queryData.queryTransactionTime) {
-                  searchParams.delete("transactionTime");
-                  setSearchParams(searchParams);
-                }
-                searchParams.set("id", "desc");
-                setSearchParams(searchParams);
-              }
+              setQuerySort(ID_DESC);
             }}
           >
             주문번호
-          </th>
-          <th
+          </Th>
+          <Th
             onClick={() => {
-              if (queryData.queryTransactionTime) {
-                searchParams.delete("transactionTime");
-                setSearchParams(searchParams);
-              } else {
-                if (queryData.queryID) {
-                  searchParams.delete("id");
-                  setSearchParams(searchParams);
-                }
-                searchParams.set("transactionTime", "desc");
-                setSearchParams(searchParams);
-              }
+              setQuerySort(TIME_DESC);
             }}
           >
             거래시간
-          </th>
-          <th>
+          </Th>
+          <Th>
             주문처리상태
-            <button
+            <StatusButton
               onClick={() => {
                 onClickStatus(true);
               }}
+              className={queryData.queryStatus === "true" ? "active" : ""}
             >
               완료
-            </button>
-            <button
+            </StatusButton>
+            <StatusButton
               onClick={() => {
                 onClickStatus(false);
               }}
+              className={queryData.queryStatus === "false" ? "active" : ""}
             >
               미완료
-            </button>
-          </th>
-          <th>고객번호</th>
-          <th>고객이름</th>
-          <th>가격</th>
-        </tr>
-      </thead>
+            </StatusButton>
+          </Th>
+          <Th>고객번호</Th>
+          <Th>고객이름</Th>
+          <Th>가격</Th>
+        </Tr>
+      </Thead>
       <OrderTableBody
         currentOrderList={getCurrentPageOrders(getFilteredOrders())}
       />
-    </table>
+    </Table>
   );
 };
 

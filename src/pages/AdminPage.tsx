@@ -1,11 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import OrderTableBoard from "../components/OrderTableBoard";
 import Pagination from "../components/Pagination";
+import { SEARCH } from "../consts/query.const";
 import useFetchData from "../hooks/useFetchData";
+import {
+  Container,
+  Header,
+  SearchBar,
+  SearchBarButton,
+  SearchBarInput,
+} from "../styles/common.style";
 import { getQueryData } from "../utils/getQueryData";
 
 const AdminPage = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const queryData = getQueryData(searchParams);
 
@@ -22,7 +31,7 @@ const AdminPage = () => {
 
   const [searchInput, setSearchInput] = useState("");
   const onClickSearchBtn = () => {
-    searchParams.set("search", `${searchInput}`);
+    searchParams.set(SEARCH, `${searchInput}`);
     setSearchParams(searchParams);
   };
 
@@ -34,15 +43,17 @@ const AdminPage = () => {
   if (error) return "An error has occurred: " + error.message;
 
   return (
-    <div>
-      <h2>AdminPage</h2>
+    <Container>
+      <Header onClick={() => navigate("/")}>스위치원 | 어드민</Header>
 
-      <input
-        type="text"
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-      />
-      <button onClick={onClickSearchBtn}>검색</button>
+      <SearchBar>
+        <SearchBarInput
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <SearchBarButton onClick={onClickSearchBtn}>검색</SearchBarButton>
+      </SearchBar>
       <OrderTableBoard
         orders={orders}
         offset={offset}
@@ -55,7 +66,7 @@ const AdminPage = () => {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
-    </div>
+    </Container>
   );
 };
 
