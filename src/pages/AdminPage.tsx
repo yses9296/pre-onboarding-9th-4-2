@@ -18,11 +18,9 @@ const AdminPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryData = getQueryData(searchParams);
 
-  const queryStatus = queryData.queryStatus;
-  const querySearch = queryData.querySearch;
   const { isLoading, orders, error } = useFetchData({
-    queryStatus,
-    querySearch,
+    queryStatus: queryData.queryStatus,
+    querySearch: queryData.querySearch,
   });
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -30,9 +28,16 @@ const AdminPage = () => {
   const offset = (currentPage - 1) * ordersPerPage;
 
   const [searchInput, setSearchInput] = useState("");
-  const onClickSearchBtn = () => {
+
+  const setQuerySearch = () => {
     searchParams.set(SEARCH, `${searchInput}`);
     setSearchParams(searchParams);
+  };
+
+  const setQuerySearchReset = () => {
+    searchParams.delete(SEARCH);
+    setSearchParams(searchParams);
+    setSearchInput("");
   };
 
   useEffect(() => {
@@ -52,7 +57,10 @@ const AdminPage = () => {
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
         />
-        <SearchBarButton onClick={onClickSearchBtn}>검색</SearchBarButton>
+        <SearchBarButton onClick={setQuerySearch}>검색</SearchBarButton>
+        {queryData.querySearch !== "" && queryData.querySearch !== null && (
+          <SearchBarButton onClick={setQuerySearchReset}>취소</SearchBarButton>
+        )}
       </SearchBar>
       <OrderTableBoard
         orders={orders}

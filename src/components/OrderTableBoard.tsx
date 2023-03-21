@@ -20,13 +20,6 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
     return orderList.slice(offset, offset + ordersPerPage);
   };
 
-  const setQuerySort = (queryValue: string) => {
-    querySort === queryValue
-      ? searchParams.delete(SORT)
-      : searchParams.set(SORT, queryValue);
-    setSearchParams(searchParams);
-  };
-
   const getFilteredOrders = () => {
     if (querySort === ID_DESC) {
       return orders!.sort(
@@ -43,7 +36,14 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
     }
   };
 
-  const onClickStatus = (status: boolean) => {
+  const setQuerySort = (queryValue: string) => {
+    querySort === queryValue
+      ? searchParams.delete(SORT)
+      : searchParams.set(SORT, queryValue);
+    setSearchParams(searchParams);
+  };
+
+  const setQueryStatus = (status: boolean) => {
     queryData.queryStatus === `${status}`
       ? searchParams.delete(STATUS)
       : searchParams.set(STATUS, `${status}`);
@@ -73,7 +73,7 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
             주문처리상태
             <StatusButton
               onClick={() => {
-                onClickStatus(true);
+                setQueryStatus(true);
               }}
               className={queryData.queryStatus === "true" ? "active" : ""}
             >
@@ -81,7 +81,7 @@ const OrderTableBoard = ({ orders, offset, ordersPerPage }: Props) => {
             </StatusButton>
             <StatusButton
               onClick={() => {
-                onClickStatus(false);
+                setQueryStatus(false);
               }}
               className={queryData.queryStatus === "false" ? "active" : ""}
             >

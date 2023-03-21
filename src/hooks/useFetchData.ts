@@ -27,7 +27,7 @@ const useFetchData = ({ queryStatus, querySearch }: QueryProps) => {
     const orders =
       filteredByDate
         ?.filter((item: OrderInterface) =>
-          item.customer_name.includes(querySearch!)
+          item.customer_name.toLowerCase().includes(querySearch!.toLowerCase())
         )
         ?.filter(
           (item: OrderInterface) => item.status.toString() === queryStatus
@@ -37,7 +37,7 @@ const useFetchData = ({ queryStatus, querySearch }: QueryProps) => {
   } else if (querySearch !== null) {
     const orders =
       filteredByDate?.filter((item: OrderInterface) =>
-        item.customer_name.includes(querySearch!)
+        item.customer_name.toLowerCase().includes(querySearch!.toLowerCase())
       ) || [];
 
     return { isLoading, orders, error };
