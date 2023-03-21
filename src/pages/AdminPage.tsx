@@ -23,9 +23,6 @@ const AdminPage = () => {
     if (queryData.queryPage) setCurrentPage(parseInt(queryData.queryPage));
   }, [searchParams]);
 
-  if (isLoading) return "Loading...";
-  if (error) return "An error has occurred: " + error.message;
-
   return (
     <>
       <div className="max-w-[1200px] mx-auto">
@@ -43,6 +40,8 @@ const AdminPage = () => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />
+        {isLoading && <h3>Loading...</h3>}
+        {error && <h3>An error has occurred: {error.message}</h3>}
       </div>
     </>
   );
