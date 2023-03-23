@@ -25,7 +25,7 @@ const AdminPage = () => {
 
   return (
     <>
-      <div className="max-w-[1200px] mx-auto">
+      <div aria-label="admin-page" className="max-w-[1200px] mx-auto">
         <SearchBar querySearchData={queryData.querySearch} />
 
         <OrderTableBoard
@@ -40,8 +40,10 @@ const AdminPage = () => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />
-        {isLoading && <h3>Loading...</h3>}
-        {error && <h3>An error has occurred: {error.message}</h3>}
+        {isLoading && <h3 aria-label="loading">Loading...</h3>}
+        {error && (
+          <h3 aria-label="error">An error has occurred: {error.message}</h3>
+        )}
       </div>
     </>
   );

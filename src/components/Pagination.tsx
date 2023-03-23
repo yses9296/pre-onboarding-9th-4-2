@@ -40,7 +40,7 @@ const Pagination = ({
           onClick={() => onClickPageBtn(number)}
           className={
             currentPage === number
-              ? "w-6 h-6 bg-slate-300 rounded mx-2"
+              ? "w-6 h-6 bg-zinc-500 text-white rounded mx-2"
               : "w-6 h-6 mx-2"
           }
         >

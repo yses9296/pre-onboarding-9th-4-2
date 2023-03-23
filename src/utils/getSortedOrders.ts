@@ -6,7 +6,7 @@ type Props = {
   orders: OrderInterface[];
 };
 
-const getFilteredOrders = ({ querySort, orders }: Props) => {
+const getSortedOrders = ({ querySort, orders }: Props) => {
   switch (querySort) {
     case ID_DESC:
       return orders!.sort(
@@ -33,4 +33,4 @@ const getFilteredOrders = ({ querySort, orders }: Props) => {
   }
 };
 
-export default getFilteredOrders;
+export default getSortedOrders;

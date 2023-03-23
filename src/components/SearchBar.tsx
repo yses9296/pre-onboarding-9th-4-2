@@ -37,25 +37,31 @@ const SearchBar = ({ querySearchData }: Props) => {
   };
   return (
     <div className=" mb-5">
-      <div className="flex flex-row items-center mb-2">
+      <div className="flex flex-row items-center mb-2 ">
         <label className="font-bold mr-3">고객 이름 검색</label>
-        <input
-          type="text"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          onKeyDown={handleKeyPress}
-          placeholder="Search by keywords"
-          className="w-80 border border-slate-500 rounded px-3 py-1 "
-        />
-        <button onClick={setQuerySearch} className="mx-2">
-          <HiOutlineSearch />
-        </button>
-
-        {querySearchData?.length !== 0 && querySearchData !== null && (
-          <button onClick={setResetQuerySearch}>
-            <MdClear />
+        <div className="w-fit rounded bg-white">
+          <input
+            type="text"
+            aria-label="search-input"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Search by keywords"
+            className="w-80 rounded px-3 py-1 outline-0"
+          />
+          <button
+            aria-label="search-button"
+            onClick={setQuerySearch}
+            className="mx-2"
+          >
+            <HiOutlineSearch />
           </button>
-        )}
+          {querySearchData?.length !== 0 && querySearchData !== null && (
+            <button onClick={setResetQuerySearch}>
+              <MdClear />
+            </button>
+          )}
+        </div>
       </div>
       <div>
         <label className="font-bold mr-3">주문처리상태</label>
@@ -63,11 +69,17 @@ const SearchBar = ({ querySearchData }: Props) => {
           name="status"
           id="status"
           onChange={(e) => setQueryStatus(e.target.value)}
-          className="border rounded px-3 py-1"
+          className="rounded px-3 py-1"
         >
-          <option value="default">default</option>
-          <option value="true">true</option>
-          <option value="false">false</option>
+          <option aria-label="status-default" value="default">
+            Default
+          </option>
+          <option aria-label="status-true" value="true">
+            완료
+          </option>
+          <option aria-label="status-false" value="false">
+            미완료
+          </option>
         </select>
       </div>
     </div>
