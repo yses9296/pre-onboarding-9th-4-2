@@ -1,6 +1,9 @@
+const DATA_URL = import.meta.env.VITE_DATA_URL;
+
 export async function fetchOrderData() {
   try {
-    const response = await fetch("/data/mockData.json");
+    const response: Response = await fetch(DATA_URL);
+
     if (!response.ok) {
       throw new Error("Bad response");
     }
