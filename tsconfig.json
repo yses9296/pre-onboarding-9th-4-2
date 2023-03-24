@@ -20,6 +20,6 @@
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "include": ["src"],
+  "include": ["src", "src/setup.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

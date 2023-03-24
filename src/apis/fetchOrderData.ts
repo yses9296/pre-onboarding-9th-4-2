@@ -17,3 +17,11 @@ export async function fetchOrderData() {
     throw error;
   }
 }
+
+// export async function fetchOrderData() {
+//   // API 호출
+//   const response = await fetch(DATA_URL);
+//   // JSON 파싱
+//   const data = await response.json();
+//   return data;
+// }

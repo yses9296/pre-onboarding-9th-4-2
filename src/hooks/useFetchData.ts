@@ -21,32 +21,31 @@ const useFetchData = ({ queryStatusData, querySearchData }: QueryProps) => {
   const filteredByDate = _orders?.filter((item: OrderInterface) =>
     item.transaction_time.includes(CURRENT_DATE)
   );
+  const filteredByStatus = (prevOrders: OrderInterface[]) => {
+    return (
+      prevOrders?.filter(
+        (item: OrderInterface) => item.status.toString() === queryStatusData
+      ) || []
+    );
+  };
+  const filteredByKeyword = (prevOrders: OrderInterface[]) => {
+    return (
+      prevOrders?.filter((item: OrderInterface) =>
+        item.customer_name
+          .toLowerCase()
+          .includes(querySearchData!.toLowerCase())
+      ) || []
+    );
+  };
 
   let orders = filteredByDate || [];
 
   if (queryStatusData !== null && querySearchData != null) {
-    orders =
-      filteredByDate
-        ?.filter((item: OrderInterface) =>
-          item.customer_name
-            .toLowerCase()
-            .includes(querySearchData!.toLowerCase())
-        )
-        ?.filter(
-          (item: OrderInterface) => item.status.toString() === queryStatusData
-        ) || [];
+    orders = filteredByStatus(filteredByKeyword(filteredByDate!)!);
   } else if (querySearchData !== null) {
-    orders =
-      filteredByDate?.filter((item: OrderInterface) =>
-        item.customer_name
-          .toLowerCase()
-          .includes(querySearchData!.toLowerCase())
-      ) || [];
+    orders = filteredByKeyword(filteredByDate!);
   } else if (queryStatusData !== null) {
-    orders =
-      filteredByDate?.filter(
-        (item: OrderInterface) => item.status.toString() === queryStatusData
-      ) || [];
+    orders = filteredByStatus(filteredByDate!);
   }
 
   return { isLoading, orders, error };
